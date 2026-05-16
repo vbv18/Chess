@@ -32,6 +32,34 @@ io.on("connection", (uniqueSocket) => {
     } else {
         uniqueSocket.emit("spectatorRole");
     }
+
+    uniqueSocket.on("disconnect", () => {
+        if (uniqueSocket.id === players.white) {
+            delete players.white;
+        } else if (uniqueSocket.id === players.black) {
+            delete players.black;
+        }
+    })
+
+    uniqueSocket.on("move", (move) => {
+        try {
+            if (chess.turn() === "w" && uniqueSocket.id !== players.white) return;
+            if (chess.turn() === "b" && uniqueSocket.id !== players.black) return;
+
+            const result = chess.move(move);
+            if (resul) {
+                currentPlayer = chess.turn();
+                io.emit("move", move);
+                io.emit("boardState", chess.fen());
+            } else {
+                console.log("Invalid Move:", move);
+                uniqueSocket.emit("Invalid Move:", move);
+            }
+        } catch (err) {
+            console.log(err);
+            uniqueSocket.emit("Invalid Move:", move);
+        }
+    })
 })
 
 server.listen(3000, () => {

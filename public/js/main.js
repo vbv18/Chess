@@ -11,6 +11,7 @@ let playerRole = null;
 const renderBoard = () => {
     const board = chess.board();
     boardElement.innerHTML = "";
+
     board.forEach((row, rowIndex) => {
         row.forEach((square, squareIndex) => {
             const sqaureElement = document.createElement("div")
@@ -40,7 +41,7 @@ const renderBoard = () => {
 
                 pieceElement.addEventListener("dragend", (e) => {
                     draggedPiece = null;
-                    sourceSqua = null;
+                    sourceSquare = null;
                 });
 
                 sqaureElement.appendChild(pieceElement);
@@ -52,7 +53,7 @@ const renderBoard = () => {
 
             sqaureElement.addEventListener("drop", () => {
                 e.preventDefault();
-                if (draggedPiece) {
+                if (draggedPiece && sourceSquare) {
                     const targetSource = {
                         row: parseInt(sqaureElement.dataset.row),
                         col: parseInt(sqaureElement.dataset.col)

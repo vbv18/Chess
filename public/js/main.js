@@ -51,7 +51,7 @@ const renderBoard = () => {
                 e.preventDefault();
             });
 
-            sqaureElement.addEventListener("drop", () => {
+            sqaureElement.addEventListener("drop", (e) => {
                 e.preventDefault();
                 if (draggedPiece && sourceSquare) {
                     const targetSource = {

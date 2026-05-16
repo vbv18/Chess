@@ -36,7 +36,7 @@
 
 .piece {
     font-size: 36px;
-    cursor: pointer;
+    cursor: grabbing;
 }
 
 .piece.draggable {

@@ -27,7 +27,7 @@ const renderBoard = () => {
                     "piece", square.color === "w" ? "white" : "black"
                 )
                 pieceElement.innerText = getPieceUnicode(square);
-                pieceElement.draggable = playerRole === square.color;
+                pieceElement.draggable = playerRole === square.color && playerRole === chess.turn();
 
                 pieceElement.addEventListener("dragstart", (e) => {
                     if (pieceElement.draggable) {
@@ -78,21 +78,22 @@ const getPieceUnicode = (piece) => {
     if (!piece) return "";
 
     const unicodePieces = {
-        'k': '♔',
-        'q': '♕',
-        'r': '♖',
-        'b': '♗',
-        'n': '♘',
-        'p': '♙',
-        'K': '♚',
-        'Q': '♛',
-        'R': '♜',
-        'B': '♝',
-        'N': '♞',
-        'P': '♟'
+        wp: "♙",
+        wr: "♖",
+        wn: "♘",
+        wb: "♗",
+        wq: "♕",
+        wk: "♔",
+
+        bp: "♟",
+        br: "♜",
+        bn: "♞",
+        bb: "♝",
+        bq: "♛",
+        bk: "♚"
     };
 
-    return unicodePieces[piece.type] || "";
+    return unicodePieces[piece.color + piece.type] || "";
 }
 
 socket.on("playerRole", (role) => {
@@ -107,11 +108,6 @@ socket.on("spectatorRole", () => {
 
 socket.on("boardState", (fen) => {
     chess.load(fen);
-    renderBoard();
-});
-
-socket.on("move", () => {
-    chess.move(move);
     renderBoard();
 });
 

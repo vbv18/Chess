@@ -26,18 +26,25 @@ io.on("connection", (uniqueSocket) => {
     if (!players.white) {
         players.white = uniqueSocket.id;
         uniqueSocket.emit("playerRole", "w");
+        console.log("White player assigned");
     } else if (!players.black) {
         players.black = uniqueSocket.id;
         uniqueSocket.emit("playerRole", "b");
+        console.log("Black player assigned");
     } else {
         uniqueSocket.emit("spectatorRole");
+        console.log("Spectator joined");
     }
+
+    uniqueSocket.emit("boardState", chess.fen());
 
     uniqueSocket.on("disconnect", () => {
         if (uniqueSocket.id === players.white) {
             delete players.white;
+            console.log("White player left");
         } else if (uniqueSocket.id === players.black) {
             delete players.black;
+            console.log("Black player left");
         }
     })
 
@@ -47,7 +54,7 @@ io.on("connection", (uniqueSocket) => {
             if (chess.turn() === "b" && uniqueSocket.id !== players.black) return;
 
             const result = chess.move(move);
-            if (resul) {
+            if (result) {
                 currentPlayer = chess.turn();
                 io.emit("move", move);
                 io.emit("boardState", chess.fen());
